@@ -4,12 +4,17 @@ using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.ServiceProcess;
 using System.Text;
-using System.Threading;
 
 namespace RT.SelfService
 {
-    public static class ServiceUtil
+    /// <summary>
+    /// Contains some utility methods for managing windows services.
+    /// </summary>
+    static class ServiceUtil
     {
+        /// <summary>
+        /// Validates the specified string as being acceptable for a service name. Returns true if this is the case, false otherwise.
+        /// </summary>
         public static bool ValidateServiceName(string name)
         {
             if (name == null || name.Length == 0 || name.Length > 80)
@@ -23,6 +28,10 @@ namespace RT.SelfService
             return true;
         }
 
+        /// <summary>
+        /// Opens a handle to the service manager. This handle is required by some other service utility methods.
+        /// The handle must always be closed after use using <see cref=CloseServiceDatabase"/>.
+        /// </summary>
         public static IntPtr OpenServiceDatabase()
         {
             var handle = SafeNativeMethods.OpenSCManager(null, null, 0xF003F);
@@ -63,28 +72,45 @@ namespace RT.SelfService
             }
         }
 
-        public static void StopService(string serviceName)
+        public static bool StartService(string serviceName)
         {
             try
             {
-                using (ServiceController controller = new ServiceController(serviceName))
+                using (var controller = new ServiceController(serviceName))
                 {
-                    if (controller.Status != ServiceControllerStatus.Stopped)
+                    if (controller.Status != ServiceControllerStatus.StartPending && controller.Status != ServiceControllerStatus.Running)
                     {
-                        controller.Stop();
-                        int num = 10;
-                        controller.Refresh();
-                        while ((controller.Status != ServiceControllerStatus.Stopped) && (num > 0))
-                        {
-                            Thread.Sleep(1000);
-                            controller.Refresh();
-                            num--;
-                        }
+                        controller.Start();
+                        controller.WaitForStatus(ServiceControllerStatus.Running, TimeSpan.FromSeconds(5));
                     }
+                    controller.Refresh();
+                    return controller.Status == ServiceControllerStatus.Running;
                 }
             }
             catch
             {
+                return false;
+            }
+        }
+
+        public static bool StopService(string serviceName)
+        {
+            try
+            {
+                using (var controller = new ServiceController(serviceName))
+                {
+                    if (controller.Status != ServiceControllerStatus.Stopped)
+                    {
+                        controller.Stop();
+                        controller.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(5));
+                    }
+                    controller.Refresh();
+                    return controller.Status == ServiceControllerStatus.Stopped;
+                }
+            }
+            catch
+            {
+                return false;
             }
         }
 
