@@ -21,6 +21,15 @@ namespace RT.SelfService
         public IList<string> ServicesDependedOn { get; set; }
 
         /// <summary>
+        /// Initialises some parameters to their defaults, such as the name of the event log used by the service,
+        /// </summary>
+        public SelfService()
+        {
+            EventLog.Log = "Application";
+            ServicesDependedOn = new List<string>().AsReadOnly();
+        }
+
+        /// <summary>
         /// Starts this service. Returns true if the service state has been verified as running, or false otherwise.
         /// Will wait up to 5 seconds for the service to start. Does not throw any exceptions.
         /// </summary>
@@ -57,12 +66,8 @@ namespace RT.SelfService
     /// </remarks>
     public abstract class SelfServiceProcess
     {
-        /// <summary>Computer account to use for this service process.</summary>
-        public ServiceAccount Account { get; set; }
         /// <summary>A list of all services contained in this process.</summary>
         public IList<SelfService> Services { get; set; }
-        /// <summary>Optional arguments to be used when started by the service manager. See Remarks on <see cref="SelfServiceProcess"/>.</summary>
-        public string ExeArgs { get; set; }
 
         /// <summary>
         /// Runs this process in "serivce mode". See Remarks on <see cref="SelfServiceProcess"/>.
@@ -73,16 +78,36 @@ namespace RT.SelfService
         }
 
         /// <summary>
+        /// Starts all the services in this process.
+        /// </summary>
+        public void StartAll()
+        {
+            foreach (var service in Services)
+                service.Start();
+        }
+
+        /// <summary>
+        /// Stops all the services in this process.
+        /// </summary>
+        public void StopAll()
+        {
+            foreach (var service in Services)
+                service.Stop();
+        }
+
+        /// <summary>
         /// Installs all services in this process (i.e. registers them with the service manager). All services are initially stopped.
         /// </summary>
-        public void Install()
+        /// <param name="account">Computer account to use for this service process.</param>
+        /// <param name="exeArgs">Optional arguments to be used when started by the service manager. May be null. See Remarks on <see cref="SelfServiceProcess"/>.</param>
+        public void Install(ServiceAccount account, string exeArgs)
         {
             if (Services.Count == 0)
                 throw new InvalidOperationException("There are no services defined.");
 
             string user = null;
             string password = null; // currently will always stay at zero, but is here in case support for ServiceAccount.User is implemented.
-            switch (Account)
+            switch (account)
             {
                 case ServiceAccount.LocalService:
                     user = @"NT AUTHORITY\LocalService";
@@ -99,8 +124,8 @@ namespace RT.SelfService
             if (binaryPathAndArgs == null || binaryPathAndArgs.Length == 0)
                 throw new InvalidOperationException("Could not retrieve entry assembly file name.");
             binaryPathAndArgs = "\"" + binaryPathAndArgs + "\"";
-            if (!string.IsNullOrEmpty(ExeArgs))
-                binaryPathAndArgs += " " + ExeArgs;
+            if (!string.IsNullOrEmpty(exeArgs))
+                binaryPathAndArgs += " " + exeArgs;
 
             IntPtr databaseHandle = ServiceUtil.OpenServiceDatabase();
             try
