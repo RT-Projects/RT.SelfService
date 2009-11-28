@@ -11,7 +11,7 @@ namespace RT.SelfService
     /// </summary>
     public abstract class SelfService : ServiceBase
     {
-        /// <summary>Service name as displayed in the service manager. Can usually be used just like <see cref="ServiceName"/> to refer to the service.</summary>
+        /// <summary>Service name as displayed in the service manager. Can usually be used just like <see cref="ServiceBase.ServiceName"/> to refer to the service.</summary>
         public string ServiceDisplayName { get; set; }
         /// <summary>Describes what the service does. This is displayed by the service manager.</summary>
         public string ServiceDescription { get; set; }
@@ -61,8 +61,8 @@ namespace RT.SelfService
     /// Encapsulates the process (i.e. executable) that contains one or more services.
     /// </summary>
     /// <remarks>
-    /// The actual process must call <see cref="ExecuteServices"/> when run with the same <see cref="ExeArgs"/> as registered
-    /// using this class. If this condition is not met, the registered services will be unable to start.
+    /// The actual process must call <see cref="ExecuteServices"/> when run with the same arguments as when the service
+    /// was registered using <see cref="Install"/>. If this condition is not met, the registered services will be unable to start.
     /// </remarks>
     public abstract class SelfServiceProcess
     {

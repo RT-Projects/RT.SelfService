@@ -30,7 +30,7 @@ namespace RT.SelfService
 
         /// <summary>
         /// Opens a handle to the service manager. This handle is required by some other service utility methods.
-        /// The handle must always be closed after use using <see cref=CloseServiceDatabase"/>.
+        /// The handle must always be closed after use using <see cref="CloseServiceDatabase"/>.
         /// </summary>
         public static IntPtr OpenServiceDatabase()
         {
