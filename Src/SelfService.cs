@@ -40,7 +40,7 @@ namespace RT.SelfService
 
         /// <summary>
         /// Stops this service. Returns true if the service state has been verified as stopped, or false otherwise.
-        /// Will wait up to 5 seconds for the service to start. Does not throw any exceptions. Note: if the service
+        /// Will wait up to 5 seconds for the service to stop. Does not throw any exceptions. Note: if the service
         /// is running under the service host, in "service mode", use <see cref="StopSelf"/> instead.
         /// </summary>
         public new bool Stop()
@@ -158,6 +158,19 @@ namespace RT.SelfService
             {
                 ServiceUtil.CloseServiceDatabase(databaseHandle);
             }
+        }
+    }
+
+    /// <summary>
+    /// Encapsulates the process (i.e. executable) that contains exactly one service, of type <typeparamref name="T"/>.
+    /// Unlike <see cref="SelfServiceProcess"/>, this is a concrete type and does not need to be derived from to be used.
+    /// </summary>
+    public class SingleSelfServiceProcess<T> : SelfServiceProcess where T : SelfService, new()
+    {
+        /// <summary>Constructor.</summary>
+        public SingleSelfServiceProcess()
+        {
+            Services = new List<SelfService> { new T() }.AsReadOnly();
         }
     }
 }
