@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.ServiceProcess;
 using System.Text;
 
-namespace RT.SelfService
+namespace RT.Services
 {
     /// <summary>
     /// Contains some utility methods for managing windows services.

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.ServiceProcess;
 
-namespace RT.SelfService
+namespace RT.Services
 {
     /// <summary>
     /// Encapsulates a Windows service hosted in a process that can install and uninstall its own services.

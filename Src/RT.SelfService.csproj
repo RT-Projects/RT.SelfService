@@ -8,7 +8,7 @@
     <ProjectGuid>{2D690226-CE76-4261-8778-87F7C213836A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RT.SelfService</RootNamespace>
+    <RootNamespace>RT.Services</RootNamespace>
     <AssemblyName>RT.SelfService</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

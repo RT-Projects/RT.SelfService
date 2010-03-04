@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 using System.Security;
 using System.Runtime.ConstrainedExecution;
 
-namespace RT.SelfService
+namespace RT.Services
 {
     [SuppressUnmanagedCodeSecurity, ComVisible(false)]
     static class SafeNativeMethods
