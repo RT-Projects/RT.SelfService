@@ -165,7 +165,7 @@ namespace RT.Services
     /// Encapsulates the process (i.e. executable) that contains exactly one service, of type <typeparamref name="T"/>.
     /// Unlike <see cref="SelfServiceProcess"/>, this is a concrete type and does not need to be derived from to be used.
     /// </summary>
-    public class SingleSelfServiceProcess<T> : SelfServiceProcess where T : SelfService, new()
+    public sealed class SingleSelfServiceProcess<T> : SelfServiceProcess where T : SelfService, new()
     {
         /// <summary>Constructor.</summary>
         public SingleSelfServiceProcess()
