@@ -65,7 +65,7 @@ namespace RT.Services
     /// </summary>
     /// <remarks>
     /// The actual process must call <see cref="ExecuteServices"/> when run with the same arguments as when the service
-    /// was registered using <see cref="Install"/>. If this condition is not met, the registered services will be unable to start.
+    /// was registered using <see cref="Install(string, string, string)"/>. If this condition is not met, the registered services will be unable to start.
     /// </remarks>
     public abstract class SelfServiceProcess
     {
@@ -105,11 +105,7 @@ namespace RT.Services
         /// <param name="exeArgs">Optional arguments to be used when started by the service manager. May be null. See Remarks on <see cref="SelfServiceProcess"/>.</param>
         public void Install(ServiceAccount account, string exeArgs)
         {
-            if (Services.Count == 0)
-                throw new InvalidOperationException("There are no services defined.");
-
             string user = null;
-            string password = null; // currently will always stay at zero, but is here in case support for ServiceAccount.User is implemented.
             switch (account)
             {
                 case ServiceAccount.LocalService:
@@ -121,8 +117,30 @@ namespace RT.Services
                     break;
 
                 case ServiceAccount.User:
-                    throw new NotSupportedException("SelfService does not currently support installing as a user.");
+                    throw new NotSupportedException("Call the other overload of Install to install as a specific user.");
             }
+            install(user, null, exeArgs);
+        }
+
+        /// <summary>
+        /// Installs all services in this process (i.e. registers them with the service manager). All services are initially stopped.
+        /// </summary>
+        /// <param name="user">Computer account to use for this service process. This user must have the "Log on as a service" permission (though the call succeeds regardless).</param>
+        /// <param name="password">Account password for the specified user. Note that its validity is not verified.</param>
+        /// <param name="exeArgs">Optional arguments to be used when started by the service manager. May be null. See Remarks on <see cref="SelfServiceProcess"/>.</param>
+        public void Install(string user, string password, string exeArgs)
+        {
+            install(user, password, exeArgs);
+        }
+
+        private void install(string user, string password, string exeArgs)
+        {
+            if (Services.Count == 0)
+                throw new InvalidOperationException("There are no services defined.");
+
+            if (!user.Contains('\\'))
+                user = ".\\" + user;
+
             string binaryPathAndArgs = Assembly.GetEntryAssembly().Location;
             if (binaryPathAndArgs == null || binaryPathAndArgs.Length == 0)
                 throw new InvalidOperationException("Could not retrieve entry assembly file name.");
