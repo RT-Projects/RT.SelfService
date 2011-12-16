@@ -8,17 +8,20 @@ namespace RT.Services
 {
     /// <summary>
     /// Encapsulates a Windows service hosted in a process that can install and uninstall its own services.
+    /// Descendants should override <see cref="ServiceBase.OnStart"/> and other similar methods.
+    /// They should also set <see cref="ServiceBase.ServiceName"/>, display name, description etc
+    /// in the constructor.
     /// </summary>
     public abstract class SelfService : ServiceBase
     {
         /// <summary>Service name as displayed in the service manager. Can usually be used just like <see cref="ServiceBase.ServiceName"/> to refer to the service.</summary>
-        public string ServiceDisplayName { get; set; }
+        public string ServiceDisplayName { get; protected set; }
         /// <summary>Describes what the service does. This is displayed by the service manager.</summary>
-        public string ServiceDescription { get; set; }
+        public string ServiceDescription { get; protected set; }
         /// <summary>Initial service startup type. The user can change this through the service manager.</summary>
-        public ServiceStartMode ServiceStartMode { get; set; }
+        public ServiceStartMode ServiceStartMode { get; protected set; }
         /// <summary>List of service names that this service depends on. Display names are acceptable but discouraged, since they can be localised.</summary>
-        public IList<string> ServicesDependedOn { get; set; }
+        public IList<string> ServicesDependedOn { get; protected set; }
 
         /// <summary>
         /// Initialises some parameters to their defaults, such as the name of the event log used by the service,
@@ -167,10 +170,14 @@ namespace RT.Services
     /// </summary>
     public sealed class SingleSelfServiceProcess<T> : SelfServiceProcess where T : SelfService, new()
     {
+        /// <summary>Gets the single service that runs in this process.</summary>
+        public T Service { get; private set; }
+
         /// <summary>Constructor.</summary>
         public SingleSelfServiceProcess()
         {
-            Services = new List<SelfService> { new T() }.AsReadOnly();
+            Service = new T();
+            Services = new List<SelfService> { Service }.AsReadOnly();
         }
     }
 }
