@@ -138,7 +138,8 @@ namespace RT.Services
             if (Services.Count == 0)
                 throw new InvalidOperationException("There are no services defined.");
 
-            if (!user.Contains('\\'))
+            // user is null for the local system account
+            if (user != null && !user.Contains('\\'))
                 user = ".\\" + user;
 
             string binaryPathAndArgs = Assembly.GetEntryAssembly().Location;
