@@ -9,7 +9,7 @@ namespace RT.Services
     /// <summary>
     /// Encapsulates a Windows service hosted in a process that can install and uninstall its own services.
     /// Descendants should override <see cref="ServiceBase.OnStart"/> and other similar methods.
-    /// They should also set <see cref="ServiceBase.ServiceName"/>, display name, description etc
+    /// They should also set <see cref="ServiceBase.ServiceName"/>, display name, description etc.
     /// in the constructor.
     /// </summary>
     public abstract class SelfService : ServiceBase
@@ -184,8 +184,8 @@ namespace RT.Services
     }
 
     /// <summary>
-    /// Encapsulates the process (i.e. executable) that contains exactly one service, of type <typeparamref name="T"/>.
-    /// Unlike <see cref="SelfServiceProcess"/>, this is a concrete type and does not need to be derived from to be used.
+    /// Encapsulates the process (i.e. executable) that contains exactly one service of type <typeparamref name="T"/>.
+    /// <c>SingleSelfServiceProcess&lt;T&gt;</c> is not abstract, so it can be used without deriving from it.
     /// </summary>
     public sealed class SingleSelfServiceProcess<T> : SelfServiceProcess where T : SelfService, new()
     {
