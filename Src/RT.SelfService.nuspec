@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>RT.SelfService</id>
+    <version>$version$</version>
+    <title>RT.SelfService</title>
+    <authors>rstarkov Timwi</authors>
+    <owners>rstarkov</owners>
+    <projectUrl>https://github.com/RT-Projects/RT.SelfService/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description></description>
+    <copyright>Copyright 2008-2017 RT Projects</copyright>
+    <tags></tags>
+  </metadata>
+</package>
