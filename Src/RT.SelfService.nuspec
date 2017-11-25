@@ -8,7 +8,7 @@
     <owners>rstarkov</owners>
     <projectUrl>https://github.com/RT-Projects/RT.SelfService/</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description></description>
+    <description>Provides functions for implementing programs that can install and uninstall themselves as Windows services.</description>
     <copyright>Copyright 2008-2017 RT Projects</copyright>
     <tags></tags>
   </metadata>
