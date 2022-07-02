@@ -62,7 +62,11 @@ namespace RT.Services
             {
                 serviceHandle = NativeMethods.OpenService(databaseHandle, serviceName, 0x10000);
                 if (serviceHandle == IntPtr.Zero)
+                {
+                    if (Marshal.GetLastWin32Error() == 1060 /* ERROR_SERVICE_DOES_NOT_EXIST */)
+                        throw new ServiceNotFoundException();
                     throw new Win32Exception();
+                }
                 NativeMethods.DeleteService(serviceHandle);
             }
             finally
@@ -148,7 +152,11 @@ namespace RT.Services
             {
                 serviceHandle = NativeMethods.CreateService(databaseHandle, serviceName, serviceDisplayName, 0xF01FF, totalServices == 1 ? 0x10 : 0x20, (int) serviceStartMode, 1, binaryPathAndArgs, null, IntPtr.Zero, ServiceUtil.MakeDependenciesString(servicesDependedOn), user, password);
                 if (serviceHandle == IntPtr.Zero)
+                {
+                    if (Marshal.GetLastWin32Error() == 1073 /* service exists */ || Marshal.GetLastWin32Error() == 1078 /* duplicate display name */)
+                        throw new ServiceAlreadyExistsException();
                     throw new Win32Exception();
+                }
 
                 if (!string.IsNullOrEmpty(serviceDescription))
                 {
