@@ -1,0 +1,46 @@
+name: build
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          submodules: true
+
+      - name: Initialise environment for ${{ github.ref }}
+        shell: pwsh
+        run: |
+          $out = git rev-list e2726132.. --count
+          echo "VER=1.1.$out" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
+
+      - name: "Log environment info: v${{ env.VER }}"
+        run: |
+          echo VER: %VER%
+          echo dotnet --version:
+          dotnet --version
+
+      - name: Install dotnet
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '7.x'
+
+      - name: dotnet pack
+        run: |
+          del Directory.Build.props
+          dotnet pack -o pack --configuration Release -p:Version=${{env.VER}} -p:FileVersion=${{env.VER}} -p:AssemblyVersion=${{env.VER}}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: RT.SelfService-v${{env.VER}}
+          path: |
+            pack/
+          if-no-files-found: error
