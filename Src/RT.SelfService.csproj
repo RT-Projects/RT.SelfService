@@ -1,7 +1,8 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <OutputType>Library</OutputType>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
 
     <Version>1.0.0.9999</Version>
     <Authors>rstarkov;Timwi</Authors>
@@ -9,6 +10,7 @@
     <PackageTags>Service;ServiceBase</PackageTags>
     <RepositoryUrl>https://github.com/RT-Projects/RT.SelfService/</RepositoryUrl>
     <PackageIconUrl>https://avatars0.githubusercontent.com/u/14182444?v=3&amp;s=200</PackageIconUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
   
   <ItemGroup>
