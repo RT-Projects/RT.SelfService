@@ -37,6 +37,13 @@ jobs:
           del Directory.Build.props
           dotnet pack -o pack --configuration Release -p:Version=${{env.VER}} -p:FileVersion=${{env.VER}} -p:AssemblyVersion=${{env.VER}}
 
+      - name: dotnet nuget push
+        if: success() && github.ref == 'refs/heads/main'
+        run: |
+          dotnet nuget push pack\* --api-key %NUGET_API_KEY% --source https://api.nuget.org/v3/index.json
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
