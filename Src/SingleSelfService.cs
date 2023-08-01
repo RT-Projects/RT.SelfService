@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.ServiceProcess;
 
@@ -83,7 +84,7 @@ public static class SingleSelfService
         if (username != null && !username.Contains('\\'))
             username = ".\\" + username;
 
-        string binaryPathAndArgs = AppContext.BaseDirectory;
+        string binaryPathAndArgs = Process.GetCurrentProcess().MainModule.FileName;
         if (binaryPathAndArgs == null || binaryPathAndArgs.Length == 0)
             throw new InvalidOperationException("Could not retrieve entry assembly file name.");
         binaryPathAndArgs = "\"" + binaryPathAndArgs + "\"";
