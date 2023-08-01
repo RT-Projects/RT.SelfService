@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -6,6 +6,25 @@ using System.ServiceProcess;
 
 namespace RT.Services
 {
+    /// <summary>Specifies a service's security context, which defines its logon type.</summary>
+    public enum ServiceAccount
+    {
+        /// <summary>
+        ///     An account that acts as a non-privileged user on the local computer, and presents anonymous credentials to any
+        ///     remote server.</summary>
+        LocalService = 0,
+        /// <summary>
+        ///     An account that provides extensive local privileges, and presents the computer's credentials to any remote
+        ///     server.</summary>
+        NetworkService = 1,
+        /// <summary>
+        ///     An account, used by the service control manager, that has extensive privileges on the local computer and acts
+        ///     as the computer on the network.</summary>
+        LocalSystem = 2,
+        /// <summary>An account defined by a specific user on the network.</summary>
+        User = 3,
+    }
+
     /// <summary>
     ///     Provides utility methods for creating executables which can install and uninstall themselves as a service, and run
     ///     both as a service and as a standard process. This class does not support processes which host multiple services.</summary>
