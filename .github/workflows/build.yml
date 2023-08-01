@@ -40,7 +40,7 @@ jobs:
       - name: dotnet nuget push
         if: success() && github.ref == 'refs/heads/main'
         run: |
-          dotnet nuget push pack\* --api-key %NUGET_API_KEY% --source https://api.nuget.org/v3/index.json
+          dotnet nuget push pack\* --api-key $env:NUGET_API_KEY --source https://api.nuget.org/v3/index.json
         env:
           NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
 
